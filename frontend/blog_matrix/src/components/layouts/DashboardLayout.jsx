@@ -17,7 +17,7 @@ export default function DashboardLayout({ onLogout }) {
   return (
     <div className="min-h-screen flex flex-col">
       <header className="bg-teal-500 text-white p-4 flex justify-between items-center">
-        <h1 className="text-xl font-bold">Blog Matrix</h1>
+        <h1 className="text-2xl font-bold">Blog Matrix</h1>
 
         <nav className="flex gap-6 items-center">
           <Link
@@ -28,10 +28,10 @@ export default function DashboardLayout({ onLogout }) {
           </Link>
           <span className="text-2xl">/</span>
           <Link
-            to="/dashboard/blogs"
+            to="/dashboard/myblogs"
             className="hover:cursor-pointer hover:text-black duration-500 text-2xl"
           >
-            Blogs
+            My Blogs
           </Link>
           <span className="text-2xl">/</span>
           <Link
@@ -39,6 +39,13 @@ export default function DashboardLayout({ onLogout }) {
             className="hover:cursor-pointer hover:text-black duration-500 text-2xl"
           >
             Profile
+          </Link>
+          <span className="text-2xl">/</span>
+          <Link
+            to="/dashboard/allblogs"
+            className="hover:cursor-pointer hover:text-black duration-500 text-2xl"
+          >
+            All Blogs
           </Link>
           <span className="text-2xl">/</span>
           <button

@@ -4,7 +4,6 @@ import jwt from "jsonwebtoken";
 import SignUpData from "../models/signUpData.js";
 
 const router = express.Router();
-const SECRET_KEY = "yourSecretKey123"; // ⚠️ move to .env in production
 
 // 🟢 LOGIN route
 router.post("/", async (req, res) => {
@@ -17,10 +16,10 @@ router.post("/", async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ message: "Invalid password" });
 
-    // ✅ Generate JWT
+    // ✅ Generate JWT using secret from .env
     const token = jwt.sign(
       { id: user._id, username: user.username },
-      SECRET_KEY,
+      process.env.SECRET_KEY, // now uses .env
       { expiresIn: "1h" }
     );
 
@@ -44,7 +43,7 @@ router.get("/verify", async (req, res) => {
   const token = authHeader.split(" ")[1];
 
   try {
-    const decoded = jwt.verify(token, SECRET_KEY);
+    const decoded = jwt.verify(token, process.env.SECRET_KEY); // uses .env
     const user = await SignUpData.findById(decoded.id).select("-password"); // exclude password
     if (!user) return res.status(404).json({ message: "User not found" });
 

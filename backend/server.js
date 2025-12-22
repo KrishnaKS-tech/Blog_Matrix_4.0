@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import signUpRoutes from "./routes/signUpRoutes.js";
 import loginRoutes from "./routes/loginRoutes.js";
+import blogFormRoutes from "./routes/blogFormRoutes.js";
 
 dotenv.config();
 
@@ -14,6 +15,7 @@ app.use(express.json());
 
 app.use("/api/signupdata", signUpRoutes);
 app.use("/api/login", loginRoutes);
+app.use("/api/blogs", blogFormRoutes);
 
 mongoose
   .connect(process.env.MONGO_URL)

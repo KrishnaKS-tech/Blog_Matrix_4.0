@@ -19,7 +19,8 @@ import ProtectedRoute from "./components/auth/ProtectedRoute";
 // Dashboard Layout + Pages
 import DashboardLayout from "./components/layouts/DashboardLayout";
 import DashboardHome from "./components/pages/DashboardHome";
-import Blogs from "./components/pages/Blogs";
+import MyBlogs from "./components/pages/MyBlogs";
+import AllBlogs from "./components/pages/AllBlogs";
 import Profile from "./components/pages/Profile";
 import GlobalRouteGuard from "./components/auth/GlobalRouteGuard";
 
@@ -66,7 +67,8 @@ function App() {
           }
         >
           <Route index element={<DashboardHome />} />
-          <Route path="blogs" element={<Blogs />} />
+          <Route path="myblogs" element={<MyBlogs />} />
+          <Route path="allblogs" element={<AllBlogs />} />
           <Route path="profile" element={<Profile />} />
         </Route>
       </Routes>
