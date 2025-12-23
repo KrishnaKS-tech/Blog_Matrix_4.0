@@ -31,3 +31,18 @@
 .animate-pop {
   animation: pop 0.3s ease-in-out;
 }
+/* TipTap editor core fix */
+.ProseMirror {
+  min-height: 200px;
+  padding: 8px;
+  outline: none;
+  cursor: text;
+}
+
+/* Placeholder */
+.ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  color: #9ca3af;
+  pointer-events: none;
+  height: 0;
+}

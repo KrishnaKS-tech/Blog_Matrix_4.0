@@ -1,7 +1,13 @@
-import { Outlet, Link, useNavigate } from "react-router-dom";
+import { Outlet, NavLink, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import Footer from "../ui/Footer";
-import Hr from "../ui/Hr";
+
+import {
+  TbSmartHome,
+  TbPaperBag,
+  TbUser,
+  TbBooks,
+  TbLogout,
+} from "react-icons/tb";
 
 export default function DashboardLayout({ onLogout }) {
   const navigate = useNavigate();
@@ -14,54 +20,66 @@ export default function DashboardLayout({ onLogout }) {
     }
   };
 
-  return (
-    <div className="min-h-screen flex flex-col">
-      <header className="bg-teal-500 text-white p-4 flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Blog Matrix</h1>
+  const linkClasses = ({ isActive }) =>
+    `flex items-center gap-3 px-4 py-3 rounded-xl text-lg transition 
+     ${
+       isActive
+         ? "bg-teal-500 text-white shadow"
+         : "text-gray-700 hover:bg-teal-100"
+     }`;
 
-        <nav className="flex gap-6 items-center">
-          <Link
-            to="/dashboard"
-            className="hover:cursor-pointer hover:text-black duration-500 text-2xl"
-          >
+  return (
+    <div className="min-h-screen bg-gray-100">
+      {/* ================= Fixed Sidebar ================= */}
+      <aside
+        className="fixed left-0 top-0 h-screen w-64
+                   bg-white shadow-xl flex flex-col z-50"
+      >
+        <div className="p-6 text-center border-b">
+          <h1 className="text-2xl font-bold text-teal-600">Blog Matrix</h1>
+          <p className="text-sm text-gray-500 mt-1">Dashboard</p>
+        </div>
+
+        <nav className="flex flex-col gap-2 p-4 flex-1 ">
+          <NavLink to="/dashboard" end className={linkClasses}>
+            <TbSmartHome size={22} />
             Home
-          </Link>
-          <span className="text-2xl">/</span>
-          <Link
-            to="/dashboard/myblogs"
-            className="hover:cursor-pointer hover:text-black duration-500 text-2xl"
-          >
+          </NavLink>
+
+          <NavLink to="/dashboard/myblogs" className={linkClasses}>
+            <TbPaperBag size={22} />
             My Blogs
-          </Link>
-          <span className="text-2xl">/</span>
-          <Link
-            to="/dashboard/profile"
-            className="hover:cursor-pointer hover:text-black duration-500 text-2xl"
-          >
-            Profile
-          </Link>
-          <span className="text-2xl">/</span>
-          <Link
-            to="/dashboard/allblogs"
-            className="hover:cursor-pointer hover:text-black duration-500 text-2xl"
-          >
+          </NavLink>
+
+          <NavLink to="/dashboard/allblogs" className={linkClasses}>
+            <TbBooks size={22} />
             All Blogs
-          </Link>
-          <span className="text-2xl">/</span>
+          </NavLink>
+
+          <NavLink to="/dashboard/profile" className={linkClasses}>
+            <TbUser size={22} />
+            Profile
+          </NavLink>
+        </nav>
+
+        <div className="p-4 border-t">
           <button
             onClick={handleLogoutClick}
-            className="hover:cursor-pointer hover:text-black duration-500 text-2xl "
+            className="flex items-center gap-3 w-full px-4 py-3 rounded-xl
+                       text-lg text-red-600 hover:bg-red-100 transition"
           >
+            <TbLogout size={22} />
             Logout
           </button>
-        </nav>
-      </header>
+        </div>
+      </aside>
 
-      <main className="grow bg-white p-6">
-        <Outlet />
-      </main>
-      <Hr />
-      <Footer />
+      {/* ================= Right Content ================= */}
+      <div className="ml-64 min-h-screen flex flex-col">
+        <main className="flex-1 p-6 md:p-10 overflow-y-auto">
+          <Outlet />
+        </main>
+      </div>
     </div>
   );
 }
