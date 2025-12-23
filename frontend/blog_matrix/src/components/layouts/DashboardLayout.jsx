@@ -1,13 +1,9 @@
 import { Outlet, NavLink, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
-import {
-  TbSmartHome,
-  TbPaperBag,
-  TbUser,
-  TbBooks,
-  TbLogout,
-} from "react-icons/tb";
+import { TbSmartHome, TbUser, TbBooks, TbLogout } from "react-icons/tb";
+import { LuNewspaper } from "react-icons/lu";
+import { FaList } from "react-icons/fa";
 
 export default function DashboardLayout({ onLogout }) {
   const navigate = useNavigate();
@@ -47,12 +43,12 @@ export default function DashboardLayout({ onLogout }) {
           </NavLink>
 
           <NavLink to="/dashboard/myblogs" className={linkClasses}>
-            <TbPaperBag size={22} />
+            <LuNewspaper size={22} />
             My Blogs
           </NavLink>
 
           <NavLink to="/dashboard/allblogs" className={linkClasses}>
-            <TbBooks size={22} />
+            <FaList size={22} />
             All Blogs
           </NavLink>
 
