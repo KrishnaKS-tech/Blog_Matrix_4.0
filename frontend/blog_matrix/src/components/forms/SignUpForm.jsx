@@ -1,7 +1,31 @@
 import { useState } from "react";
 import axios from "axios";
 
-function SignUpForm({ showSignUp, onClose }) {
+/* 🔹 Floating Input Component */
+function FloatingInput({ label, name, type = "text", value, onChange }) {
+  return (
+    <div className="relative w-full">
+      <span
+        className="absolute -top-3 left-4 bg-white px-2
+                   text-md text-gray-500 z-10"
+      >
+        {label}
+      </span>
+      <input
+        name={name}
+        type={type}
+        value={value}
+        onChange={onChange}
+        className="w-full border border-gray-300 rounded-xl
+                   px-4 py-3 focus:outline-none
+                   focus:border-teal-500 transition"
+        required
+      />
+    </div>
+  );
+}
+
+export default function SignUpForm({ showSignUp, onClose }) {
   const [form, setForm] = useState({
     firstname: "",
     lastname: "",
@@ -10,7 +34,6 @@ function SignUpForm({ showSignUp, onClose }) {
   });
   const [loading, setLoading] = useState(false);
 
-  // Hide when not triggered
   if (!showSignUp) return null;
 
   const handleChange = (e) =>
@@ -27,9 +50,9 @@ function SignUpForm({ showSignUp, onClose }) {
       );
       alert(res.data.message);
       setForm({ firstname: "", lastname: "", username: "", password: "" });
-      onClose(); // ✅ close popup after successful signup
+      onClose();
     } catch (error) {
-      if (error.response && error.response.status === 400) {
+      if (error.response?.status === 400) {
         alert(error.response.data.message);
       } else {
         alert("Something went wrong. Please try again.");
@@ -41,71 +64,74 @@ function SignUpForm({ showSignUp, onClose }) {
 
   return (
     <div
-      className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn"
+      className="fixed inset-0 bg-black/40 backdrop-blur-sm
+                 flex items-center justify-center z-50"
       onClick={onClose}
     >
       <div
-        className="bg-white p-8 rounded-2xl w-[600px] shadow-xl animate-pop relative"
+        className="bg-white p-12 rounded-3xl w-[600px]
+                   shadow-2xl relative animate-pop"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Close button */}
+        {/* ❌ Close */}
         <button
           onClick={onClose}
-          className="absolute top-3 right-4 text-gray-400 hover:text-black text-xl"
+          className="absolute top-4 right-5 text-gray-400
+                     hover:text-black text-xl"
         >
           ✕
         </button>
 
-        <h2 className="text-3xl text-teal-500 mb-8 font-semibold text-center">
-          Sign Up
+        {/* 🔹 Heading */}
+        <h2
+          className="text-4xl font-bold text-gray-600
+                       text-center mb-16"
+        >
+          Create Account
         </h2>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <div className="flex gap-4">
-            <input
+        {/* 🔹 Form */}
+        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+          {/* First + Last Name */}
+          <div className="flex gap-4 ">
+            <FloatingInput
+              label="First Name"
               name="firstname"
-              type="text"
-              placeholder="First Name"
               value={form.firstname}
               onChange={handleChange}
-              className="border border-gray-300 p-3 rounded-md w-full"
-              required
             />
-            <input
+
+            <FloatingInput
+              label="Last Name"
               name="lastname"
-              type="text"
-              placeholder="Last Name"
               value={form.lastname}
               onChange={handleChange}
-              className="border border-gray-300 p-3 rounded-md w-full"
-              required
             />
           </div>
 
-          <input
+          <FloatingInput
+            label="Username"
             name="username"
-            type="text"
-            placeholder="Create Username"
             value={form.username}
             onChange={handleChange}
-            className="border border-gray-300 p-3 rounded-md"
-            required
           />
 
-          <input
+          <FloatingInput
+            label="Password"
             name="password"
             type="password"
-            placeholder="Create Password"
             value={form.password}
             onChange={handleChange}
-            className="border border-gray-300 p-3 rounded-md"
-            required
           />
 
+          {/* 🔹 Submit */}
           <button
             type="submit"
             disabled={loading}
-            className="bg-teal-500 text-white p-3 rounded-md text-lg hover:bg-teal-600 disabled:opacity-50 transition"
+            className="bg-teal-500 text-white py-3 rounded-xl
+                       text-lg font-semibold
+                       hover:bg-teal-600 transition
+                       disabled:opacity-50"
           >
             {loading ? "Creating Account..." : "Sign Up"}
           </button>
@@ -114,5 +140,3 @@ function SignUpForm({ showSignUp, onClose }) {
     </div>
   );
 }
-
-export default SignUpForm;

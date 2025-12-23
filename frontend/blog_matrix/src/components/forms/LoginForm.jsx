@@ -1,7 +1,31 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-hot-toast"; // ✅ import toast
+import { toast } from "react-hot-toast";
+
+/* 🔹 Floating Input Component */
+function FloatingInput({ label, name, type = "text", value, onChange }) {
+  return (
+    <div className="relative w-full">
+      <span
+        className="absolute -top-3 left-4 bg-white px-2
+                   text-md text-gray-500 z-10"
+      >
+        {label}
+      </span>
+      <input
+        name={name}
+        type={type}
+        value={value}
+        onChange={onChange}
+        className="w-full border border-gray-300 rounded-xl
+                   px-4 py-3 focus:outline-none
+                   focus:border-teal-500 transition"
+        required
+      />
+    </div>
+  );
+}
 
 function LoginForm({ showLogin, onClose }) {
   const navigate = useNavigate();
@@ -10,9 +34,8 @@ function LoginForm({ showLogin, onClose }) {
 
   if (!showLogin) return null;
 
-  const handleChange = (e) => {
+  const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,14 +46,12 @@ function LoginForm({ showLogin, onClose }) {
       const { token } = res.data;
 
       localStorage.setItem("token", token);
-
-      toast.success("Logged in successfully! 👋"); // ✅ show toast
+      toast.success("Logged in successfully 👋");
 
       onClose();
       navigate("/dashboard");
     } catch (err) {
-      console.error(err);
-      toast.error("Invalid credentials"); // ✅ toast on error
+      toast.error("Invalid credentials", err);
     } finally {
       setLoading(false);
     }
@@ -38,49 +59,56 @@ function LoginForm({ showLogin, onClose }) {
 
   return (
     <div
-      className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn"
+      className="fixed inset-0 bg-black/40 backdrop-blur-sm
+                 flex items-center justify-center z-50"
       onClick={onClose}
     >
       <div
-        className="bg-white p-8 rounded-2xl w-[350px] shadow-xl animate-pop relative"
+        className="bg-white p-12 rounded-3xl w-[400px]
+                   shadow-2xl relative animate-pop"
         onClick={(e) => e.stopPropagation()}
       >
+        {/* ❌ Close */}
         <button
           onClick={onClose}
-          className="absolute top-2 right-3 text-gray-400 hover:text-black text-xl"
+          className="absolute top-4 right-5 text-gray-400
+                     hover:text-black text-xl"
         >
           ✕
         </button>
 
-        <h2 className="text-2xl font-semibold text-center text-teal-500 mb-4">
-          Login
+        {/* 🔹 Heading */}
+        <h2
+          className="text-3xl font-bold text-gray-600
+                       text-center mb-12"
+        >
+          Welcome Back
         </h2>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <input
+        {/* 🔹 Form */}
+        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+          <FloatingInput
+            label="Username"
             name="username"
-            type="text"
-            placeholder="Username"
             value={form.username}
             onChange={handleChange}
-            className="border border-gray-300 p-3 rounded-md w-full"
-            required
           />
 
-          <input
+          <FloatingInput
+            label="Password"
             name="password"
             type="password"
-            placeholder="Password"
             value={form.password}
             onChange={handleChange}
-            className="border border-gray-300 p-3 rounded-md w-full"
-            required
           />
 
           <button
             type="submit"
-            className="bg-teal-500 text-white p-3 rounded hover:bg-teal-600"
             disabled={loading}
+            className="bg-teal-500 text-white py-3 rounded-xl
+                       text-lg font-semibold
+                       hover:bg-teal-600 transition
+                       disabled:opacity-50"
           >
             {loading ? "Logging in..." : "Login"}
           </button>
