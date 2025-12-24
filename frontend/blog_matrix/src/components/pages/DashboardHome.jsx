@@ -62,7 +62,7 @@ export default function DashboardHome() {
         </div>
       </div>
 
-      <div className="flex  gap-6">
+      <div className="flex  gap-10">
         {/* Optional Illustration / Content Section */}
         <div className="mt-6 bg-white rounded-3xl p-8 flex flex-col items-center gap-6 flex-1 mb-6">
           <img
@@ -76,12 +76,9 @@ export default function DashboardHome() {
               Ready to write your next blog?
             </h2>
 
-            <p className="text-gray-600 mb-2">
-              Start creating meaningful content using our powerful editor.
-            </p>
-
-            <p className="text-sm text-gray-500 mb-4">
-              Write freely, format effortlessly, and publish when you’re ready.
+            <p className="text-gray-600 mb-6">
+              Start creating meaningful content using our powerful editor. Write
+              freely, format effortlessly, and publish when you’re ready.
             </p>
 
             {/* Feature highlights */}

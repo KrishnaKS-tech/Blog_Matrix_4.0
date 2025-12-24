@@ -95,7 +95,7 @@ export default function BlogForm() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-6">
+    <div className="max-w-3xl mx-auto px-0 py-6">
       <div className="bg-white rounded-3xl p-8">
         {/* Form Heading */}
         <h2 className="text-3xl font-bold text-teal-600 text-center mb-8">

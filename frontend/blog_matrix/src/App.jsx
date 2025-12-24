@@ -45,7 +45,7 @@ function Home() {
           <div className="flex-1">
             <h1 className="text-4xl font-bold text-gray-800 leading-snug">
               Express your ideas with{" "}
-              <span className="text-teal-600">Blog Matrix</span>
+              <p className="text-teal-600 text-5xl">Blog Matrix</p>
             </h1>
 
             <p className="text-lg text-gray-600 mt-6">
