@@ -21,14 +21,14 @@ export default function MyBlogs() {
   const fetchMyBlogs = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:5000/api/blogs/myblogs", {
+
+      const res = await axios.get("http://localhost:5000/api/blogs/myblogs", {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      if (!res.ok) throw new Error("Failed to fetch blogs");
-      setBlogs(await res.json());
+      setBlogs(res.data);
     } catch (err) {
-      toast.error(err.message);
+      toast.error(err.response?.data?.message || "Failed to fetch blogs");
     } finally {
       setLoading(false);
     }
