@@ -1,104 +1,119 @@
+// React hook for managing component state
 import { useState } from "react";
+
+// TipTap editor components and hooks
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
 
+// HTTP client for API requests
 import axios from "axios";
+
+// Toast notifications for success/error messages
 import toast from "react-hot-toast";
+
+// Icon for image button
 import { FaImages } from "react-icons/fa";
 
-/* 🔹 Floating Input Component */
-function FloatingInput({ label, value, onChange, type = "text" }) {
-  return (
-    <div className="relative w-full">
-      <span className="absolute -top-3 left-6 bg-white px-2  text-gray-500 z-10 text-xl ">
-        {label}
-      </span>
-      <input
-        type={type}
-        value={value}
-        onChange={onChange}
-        className="w-full border border-gray-300 rounded-xl px-5 py-4 text-xl
-                   focus:outline-none focus:border-teal-500 transition "
-        required
-      />
-    </div>
-  );
-}
-/* 🔹 Floating Editor Component */
-function FloatingEditor({ label, editor }) {
-  return (
-    <div className="relative w-full text-xl">
-      <span className="absolute -top-3 left-6 bg-white px-2 text-gray-500 z-10 text-xl">
-        {label}
-      </span>
-      <div
-        className="border border-gray-200 rounded-2xl min-h-[250px] p-4 focus-within:ring-1
-                   focus-within:ring-teal-400 transition cursor-text shadow-sm"
-        onClick={() => editor?.chain().focus().run()}
-      >
-        <EditorContent editor={editor} />
-      </div>
-    </div>
-  );
-}
+import FloatingInput from "../ui/FloatingInput";
 
+import FloatingEditor from "../ui/FloatingEditor";
+
+/* 🔹 Floating Input Component
+   Reusable input with a floating label
+*/
+
+/* 🔹 Floating Editor Component
+   Wrapper for TipTap editor with floating label
+*/
+
+/* 🔹 Main Blog Form Component */
 export default function BlogForm() {
+  // State for blog title
   const [title, setTitle] = useState("");
+
+  // State for tags
   const [tags, setTags] = useState("");
 
+  // Initialize TipTap editor
   const editor = useEditor({
-    extensions: [StarterKit, Image],
-    content: "",
+    extensions: [
+      StarterKit, // Basic formatting (bold, italic, lists, etc.)
+      Image, // Image support
+    ],
+    content: "", // Initial editor content
   });
 
+  /* 🔹 Add Image to Editor */
   const addImage = () => {
     const url = prompt("Enter image URL");
-    if (url) editor?.chain().focus().setImage({ src: url }).run();
+    if (url) {
+      editor?.chain().focus().setImage({ src: url }).run();
+    }
   };
 
+  /* 🔹 Handle Blog Submission */
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Prevent submission if editor is empty
     if (!editor || editor.isEmpty) {
       toast.error("Blog description cannot be empty");
       return;
     }
 
     try {
+      // Get JWT token from local storage
       const token = localStorage.getItem("token");
 
+      // Send blog data to backend
       await axios.post(
         "http://localhost:5000/api/blogs",
-        { title, description: editor.getHTML(), tags: tags.trim() },
-        { headers: { Authorization: `Bearer ${token}` } }
+        {
+          title,
+          description: editor.getHTML(), // Editor content as HTML
+          tags: tags.trim(),
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
 
+      // Success feedback
       toast.success("Blog published successfully!");
+
+      // Reset form
       setTitle("");
       setTags("");
       editor.commands.clearContent();
     } catch {
+      // Error feedback
       toast.error("Failed to publish blog");
     }
   };
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-6">
-      <div className="bg-white rounded-3xl  p-8">
+      <div className="bg-white rounded-3xl p-8">
+        {/* Form Heading */}
         <h2 className="text-3xl font-bold text-teal-600 text-center mb-8">
           Create Blog
         </h2>
 
+        {/* Blog Form */}
         <form onSubmit={handleSubmit} className="flex flex-col gap-10">
-          {/* Title */}
+          {/* Blog Title */}
           <FloatingInput
             label="Blog Title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
 
-          {/* Toolbar */}
-          <div className="flex gap-2 border border-gray-200 rounded-lg p-2 bg-white ">
+          {/* Editor Toolbar */}
+          <div className="flex gap-2 border border-gray-200 rounded-lg p-2 bg-white">
+            {/* Bold */}
             <button
               type="button"
               onClick={() => editor?.chain().focus().toggleBold().run()}
@@ -106,6 +121,8 @@ export default function BlogForm() {
             >
               B
             </button>
+
+            {/* Italic */}
             <button
               type="button"
               onClick={() => editor?.chain().focus().toggleItalic().run()}
@@ -113,6 +130,8 @@ export default function BlogForm() {
             >
               I
             </button>
+
+            {/* Image Insert */}
             <button
               type="button"
               onClick={addImage}
@@ -123,18 +142,17 @@ export default function BlogForm() {
             </button>
           </div>
 
-          {/* Editor */}
-          {/* Editor with Floating Label */}
+          {/* Blog Content Editor */}
           <FloatingEditor label="Blog Content" editor={editor} />
 
-          {/* Tags */}
+          {/* Tags Input */}
           <FloatingInput
-            label="Tags "
+            label="Tags"
             value={tags}
             onChange={(e) => setTags(e.target.value)}
           />
 
-          {/* Submit */}
+          {/* Submit Button */}
           <button
             type="submit"
             className="w-full bg-teal-500 text-white py-3 rounded-2xl

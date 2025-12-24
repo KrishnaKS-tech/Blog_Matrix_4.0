@@ -2,30 +2,9 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
+import FloatingInput from "../ui/FloatingInput";
 
 /* 🔹 Floating Input Component */
-function FloatingInput({ label, name, type = "text", value, onChange }) {
-  return (
-    <div className="relative w-full">
-      <span
-        className="absolute -top-3 left-4 bg-white px-2
-                   text-md text-gray-500 z-10"
-      >
-        {label}
-      </span>
-      <input
-        name={name}
-        type={type}
-        value={value}
-        onChange={onChange}
-        className="w-full border border-gray-300 rounded-xl
-                   px-4 py-3 focus:outline-none
-                   focus:border-teal-500 transition"
-        required
-      />
-    </div>
-  );
-}
 
 function LoginForm({ showLogin, onClose }) {
   const navigate = useNavigate();
