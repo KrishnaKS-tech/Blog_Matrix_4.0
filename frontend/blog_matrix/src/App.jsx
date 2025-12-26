@@ -1,38 +1,47 @@
+// Global styles
 import "./App.css";
-import Navbar from "./components/ui/Navbar";
-import SignUpModal from "./components/forms/SignUpModal";
-import blog from "./images/blog.jpg";
-import home from "./images/home2.png";
+
+// UI Components
 import Hr from "./components/ui/Hr";
 import WhatIsBM from "./components/blog/WhatIsBM";
 import Footer from "./components/ui/Footer";
+import HomeSidebar from "./components/ui/HomeSidebar";
 
+// Images
+import blog from "./images/blog.jpg";
+import home from "./images/home2.png";
+
+// React Router for navigation
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+// React hook
 import { useCallback } from "react";
 
-// Toast
+// Toast notifications
 import { Toaster } from "react-hot-toast";
 
-// Protected Route
+// Route protection (frontend auth guard)
 import ProtectedRoute from "./components/auth/ProtectedRoute";
+import GlobalRouteGuard from "./components/auth/GlobalRouteGuard";
 
-// Dashboard Layout + Pages
+// Dashboard layout and pages
 import DashboardLayout from "./components/layouts/DashboardLayout";
 import DashboardHome from "./components/pages/DashboardHome";
 import MyBlogs from "./components/pages/MyBlogs";
 import AllBlogs from "./components/pages/AllBlogs";
 import Profile from "./components/pages/Profile";
-import GlobalRouteGuard from "./components/auth/GlobalRouteGuard";
 
-import HomeSidebar from "./components/ui/HomeSidebar";
-
+/**
+ * 🏠 Home Component
+ * Public landing page (NO authentication required)
+ */
 function Home() {
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Sidebar */}
+      {/* Sidebar visible on home page */}
       <HomeSidebar />
 
-      {/* Main Content */}
+      {/* Main content area */}
       <div className="ml-64">
         {/* Hero Section */}
         <section className="flex flex-col md:flex-row items-center gap-10 px-10 py-16">
@@ -55,14 +64,16 @@ function Home() {
           </div>
         </section>
 
+        {/* Divider */}
         <Hr mb="10" mt="4" />
 
-        {/* What is Blog Matrix */}
+        {/* About Section */}
         <section className="flex flex-col md:flex-row items-center gap-10 px-10 py-12">
           <img src={home} alt="Home" className="w-full md:w-1/2 rounded-2xl" />
           <WhatIsBM />
         </section>
 
+        {/* Footer */}
         <Hr mb="6" mt="6" />
         <Footer />
       </div>
@@ -70,29 +81,47 @@ function Home() {
   );
 }
 
+/**
+ * 🚀 App Component
+ * Root component of the application
+ * Handles routing and global guards
+ */
 function App() {
+  /**
+   * Logout handler
+   * Clears JWT token from localStorage
+   */
   const handleLogout = useCallback(() => {
     localStorage.removeItem("token");
   }, []);
 
   return (
     <BrowserRouter>
+      {/* Toast container for notifications */}
       <Toaster position="top-center" />
 
-      {/* 🔥 Global guard that always checks the URL */}
+      {/* 🔥 GlobalRouteGuard
+         - Runs on every route change
+         - Can be used for token expiry checks, redirects, etc.
+      */}
       <GlobalRouteGuard />
 
+      {/* Application routes */}
       <Routes>
+        {/* Public route */}
         <Route path="/" element={<Home />} />
 
+        {/* 🔐 Protected Dashboard Routes */}
         <Route
           path="/dashboard"
           element={
+            // ProtectedRoute checks if JWT exists
             <ProtectedRoute>
               <DashboardLayout onLogout={handleLogout} />
             </ProtectedRoute>
           }
         >
+          {/* Nested dashboard routes */}
           <Route index element={<DashboardHome />} />
           <Route path="myblogs" element={<MyBlogs />} />
           <Route path="allblogs" element={<AllBlogs />} />
@@ -103,4 +132,5 @@ function App() {
   );
 }
 
+// Export App as default
 export default App;
