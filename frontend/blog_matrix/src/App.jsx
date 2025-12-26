@@ -37,7 +37,7 @@ import Profile from "./components/pages/Profile";
  */
 function Home() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-teal-50 mb-0">
       {/* Sidebar visible on home page */}
       <HomeSidebar />
 

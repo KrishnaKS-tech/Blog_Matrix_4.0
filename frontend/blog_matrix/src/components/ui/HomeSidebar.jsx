@@ -10,7 +10,7 @@ export default function HomeSidebar() {
   return (
     <>
       {/* ===== Fixed Sidebar ===== */}
-      <aside className="fixed left-0 top-0 h-screen w-64 bg-white border-r border-gray-200 z-50 flex flex-col ">
+      <aside className="fixed left-0 top-0 h-screen w-64 bg-white  flex flex-col rounded-r-4xl shadow-xl">
         <img src={bmlogo} alt="Logo" className="w-50 h-50 mx-auto mt-4" />
         <div className="p-6 border-b border-gray-300 pt-0 flex flex-col justify-center items-center">
           <h1 className="text-3xl font-bold text-teal-600 ">Blog Matrix</h1>

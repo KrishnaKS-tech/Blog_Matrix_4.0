@@ -1,9 +1,16 @@
+// React hooks for lifecycle and state management
 import { useEffect, useState } from "react";
+
+// Toast notifications for errors
 import toast from "react-hot-toast";
+
+// Icon for blog cards
 import { TbBook } from "react-icons/tb";
 
+// Number of blogs shown per page
 const BLOGS_PER_PAGE = 6;
 
+// Helper function to format blog creation date
 const formatDate = (date) =>
   new Date(date).toLocaleDateString("en-IN", {
     day: "2-digit",
@@ -11,16 +18,38 @@ const formatDate = (date) =>
     year: "numeric",
   });
 
+/**
+ * 🔹 AllBlogs Component
+ * Purpose:
+ *  - Fetch and display all blogs from backend
+ *  - Show blogs in grid view
+ *  - Open full blog view on click
+ *  - Implement pagination ("Load More")
+ */
 export default function AllBlogs() {
+  // Store all blogs fetched from backend
   const [blogs, setBlogs] = useState([]);
+
+  // Controls how many blogs are visible
   const [visibleCount, setVisibleCount] = useState(BLOGS_PER_PAGE);
+
+  // Stores the selected blog for full view
   const [activeBlog, setActiveBlog] = useState(null);
+
+  // Loading state while fetching blogs
   const [loading, setLoading] = useState(true);
 
+  /**
+   * 🔹 Fetch all blogs from backend API
+   */
   const fetchAllBlogs = async () => {
     try {
       const res = await fetch("http://localhost:5000/api/blogs/allblogs");
+
+      // Handle API failure
       if (!res.ok) throw new Error("Failed to fetch all blogs.");
+
+      // Update blogs state
       setBlogs(await res.json());
     } catch (err) {
       toast.error(err.message);
@@ -29,17 +58,21 @@ export default function AllBlogs() {
     }
   };
 
+  // Fetch blogs once when component mounts
   useEffect(() => {
     fetchAllBlogs();
   }, []);
 
+  // Loading UI
   if (loading)
     return <p className="text-center mt-12 text-gray-500">Loading blogs...</p>;
 
   /* ================= FULL BLOG VIEW ================= */
+  // When a blog is clicked, show full blog content
   if (activeBlog) {
     return (
       <div className="max-w-5xl mx-auto p-0">
+        {/* Back Button */}
         <button
           onClick={() => setActiveBlog(null)}
           className="mb-6 text-teal-600 font-medium hover:underline"
@@ -47,11 +80,14 @@ export default function AllBlogs() {
           ← Back to All Blogs
         </button>
 
+        {/* Full Blog Card */}
         <div className="bg-white rounded-3xl shadow-2xl p-12">
+          {/* Blog Title */}
           <h1 className="text-4xl font-bold text-gray-800 mb-4">
             {activeBlog.title}
           </h1>
 
+          {/* Blog Metadata */}
           <div className="flex flex-wrap gap-4 text-sm text-gray-400 mb-8">
             <span>📅 {formatDate(activeBlog.createdAt)}</span>
             <span className="font-semibold text-teal-600">
@@ -59,6 +95,7 @@ export default function AllBlogs() {
             </span>
           </div>
 
+          {/* Blog Content */}
           <div
             className="prose max-w-none text-gray-700"
             dangerouslySetInnerHTML={{
@@ -66,6 +103,7 @@ export default function AllBlogs() {
             }}
           />
 
+          {/* Tags */}
           <div className="mt-10 pt-6 border-t text-sm text-gray-400">
             Tags: {activeBlog.tags}
           </div>
@@ -77,7 +115,7 @@ export default function AllBlogs() {
   /* ================= GRID VIEW ================= */
   return (
     <div className="px-6 py-10 max-w-6xl mx-auto">
-      {/* HEADER */}
+      {/* Page Header */}
       <div className="mb-10">
         <h2 className="text-4xl font-bold text-teal-600 mb-2">Explore Blogs</h2>
         <p className="text-gray-500">
@@ -85,10 +123,12 @@ export default function AllBlogs() {
         </p>
       </div>
 
+      {/* No blogs found */}
       {blogs.length === 0 ? (
         <p className="text-gray-500 text-center">No blogs found.</p>
       ) : (
         <>
+          {/* Blog Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {blogs.slice(0, visibleCount).map((blog) => (
               <div
@@ -100,12 +140,15 @@ export default function AllBlogs() {
                            transition-all duration-300
                            hover:-translate-y-1"
               >
+                {/* Blog Title */}
                 <div className="flex items-center gap-3 mb-3">
                   <TbBook size={36} className="text-teal-500" />
                   <h3 className="text-2xl font-semibold text-gray-800 mb-3">
                     {blog.title}
                   </h3>
                 </div>
+
+                {/* Blog Preview */}
                 <div
                   className="prose prose-sm max-w-none text-gray-700 line-clamp-4"
                   dangerouslySetInnerHTML={{
@@ -113,6 +156,7 @@ export default function AllBlogs() {
                   }}
                 />
 
+                {/* Footer */}
                 <div className="mt-6 flex justify-between items-center">
                   <span className="text-teal-600 font-semibold">
                     Read more →
@@ -123,8 +167,9 @@ export default function AllBlogs() {
                   </span>
                 </div>
 
-                <div className="mt-2 text-md font-medium text-gray-500 flex items-center ">
-                  Posted By :{" "}
+                {/* Author */}
+                <div className="mt-2 text-md font-medium text-gray-500 flex items-center">
+                  Posted By :
                   <p className="ml-2 text-black text-xl">
                     {blog.author?.username || "Unknown"}
                   </p>
@@ -133,6 +178,7 @@ export default function AllBlogs() {
             ))}
           </div>
 
+          {/* Load More Button */}
           {visibleCount < blogs.length && (
             <div className="flex justify-center mt-12">
               <button
